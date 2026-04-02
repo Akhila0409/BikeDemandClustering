@@ -1,0 +1,78 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+
+# ------------------------------------------
+# STEP 1: LOAD BOTH DATASETS
+# ------------------------------------------
+hour = pd.read_csv("hour.csv")
+day = pd.read_csv("day.csv")
+
+print("Hour Data Loaded:", hour.shape)
+print("Day Data Loaded:", day.shape)
+
+# ------------------------------------------
+# STEP 2: SELECT IMPORTANT FEATURES
+# ------------------------------------------
+hour_df = hour[['season','mnth','hr','holiday','workingday','weathersit',
+                'temp','hum','windspeed','cnt']]
+
+day_df = day[['season','mnth','weekday','workingday','weathersit',
+              'temp','hum','windspeed','cnt']]
+
+# ------------------------------------------
+# STEP 3: NORMALIZE DATA
+# ------------------------------------------
+scaler = StandardScaler()
+hour_scaled = scaler.fit_transform(hour_df)
+day_scaled = scaler.fit_transform(day_df)
+
+# ------------------------------------------
+# STEP 4: APPLY K-MEANS CLUSTERING
+# ------------------------------------------
+k = 3  # number of clusters
+
+hour_kmeans = KMeans(n_clusters=k, random_state=0)
+day_kmeans = KMeans(n_clusters=k, random_state=0)
+
+hour_clusters = hour_kmeans.fit_predict(hour_scaled)
+day_clusters = day_kmeans.fit_predict(day_scaled)
+
+hour_df['Cluster'] = hour_clusters
+day_df['Cluster'] = day_clusters
+
+print("\nHour Clusters Assigned")
+print(hour_df['Cluster'].value_counts())
+
+print("\nDay Clusters Assigned")
+print(day_df['Cluster'].value_counts())
+
+# ------------------------------------------
+# STEP 5: VISUALIZE CLUSTERS (HOURLY)
+# ------------------------------------------
+plt.scatter(hour_df['hr'], hour_df['cnt'], c=hour_df['Cluster'])
+plt.xlabel("Hour of the Day")
+plt.ylabel("Bike Demand (cnt)")
+plt.title("Hourly Bike Demand Clusters")
+plt.show()
+
+# ------------------------------------------
+# STEP 6: VISUALIZE CLUSTERS (DAILY)
+# ------------------------------------------
+plt.scatter(day_df['weekday'], day_df['cnt'], c=day_df['Cluster'])
+plt.xlabel("Day of Week")
+plt.ylabel("Bike Demand (cnt)")
+plt.title("Daily Bike Demand Clusters")
+plt.show()
+
+# ------------------------------------------
+# STEP 7: ANALYZE CLUSTERS
+# ------------------------------------------
+print("\n===== HOURLY CLUSTER MEAN VALUES =====")
+print(hour_df.groupby('Cluster').mean())
+
+print("\n===== DAILY CLUSTER MEAN VALUES =====")
+print(day_df.groupby('Cluster').mean())
+
+print("\n✔️ PROJECT FINISHED SUCCESSFULLY!")
