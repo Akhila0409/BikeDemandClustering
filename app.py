@@ -38,10 +38,6 @@ st.markdown("""
 st.title("🏍️ Bike Demand Pattern Clustering Dashboard")
 st.markdown("### Unlock insights from daily and hourly bike-sharing demand patterns using K-Means Clustering.")
 st.markdown("---")
-
-# ------------------------------------------
-# LOAD DATA WITH CACHING
-# ------------------------------------------
 @st.cache_data
 def load_data():
     hour = pd.read_csv("hour.csv")
@@ -54,9 +50,7 @@ except FileNotFoundError:
     st.error("Error: Could not find 'hour.csv' or 'day.csv' in the directory.")
     st.stop()
 
-# ------------------------------------------
-# SIDEBAR CONTROLS
-# ------------------------------------------
+
 st.sidebar.header("⚙️ Configuration")
 dataset_choice = st.sidebar.radio("Select Dataset to Analyze:", ["Hourly Data", "Daily Data"])
 k_clusters = st.sidebar.slider("Number of Clusters (k):", min_value=2, max_value=8, value=3)
@@ -94,9 +88,6 @@ df_scaled = scaler.fit_transform(df_features)
 kmeans = KMeans(n_clusters=k_clusters, random_state=42)
 df['Cluster'] = kmeans.fit_predict(df_scaled)
 
-# ------------------------------------------
-# DASHBOARD LAYOUT & VISUALS
-# ------------------------------------------
 col1, col2 = st.columns([2, 1])
 
 with col1:
