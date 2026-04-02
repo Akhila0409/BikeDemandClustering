@@ -35,7 +35,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.title("🚴‍♂️ Bike Demand Pattern Clustering Dashboard")
+st.title("🏍️ Bike Demand Pattern Clustering Dashboard")
 st.markdown("### Unlock insights from daily and hourly bike-sharing demand patterns using K-Means Clustering.")
 st.markdown("---")
 
@@ -72,10 +72,6 @@ color_palettes = {
     "Dark Magma": ['#2E004B', '#5A0D65', '#8C1E70', '#C23267', '#EC5A53', '#FA9348', '#FFCE5B', '#FFF095']
 }
 selected_palette = color_palettes[theme_choice][:k_clusters]
-
-# ------------------------------------------
-# PROCESS & CLUSTER DATA
-# ------------------------------------------
 if dataset_choice == "Hourly Data":
     df = hour_raw.copy()
     features = ['season', 'mnth', 'hr', 'holiday', 'workingday', 'weathersit', 'temp', 'hum', 'windspeed', 'cnt']
